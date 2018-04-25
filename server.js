@@ -31,8 +31,7 @@ app.use(express.static("public"));
 mongoose.connect("mongodb://localhost/newsScraper_DB");
 
 // Routes
-require("./routes/route.js");
-
+require("./routes/route.js")(app);
 
 
 // Start the server
