@@ -50,4 +50,6 @@ exports.articles = function(req, res) {
       // If an error occurred, send it to the client
       res.json(err);
     });
-});
+};
+
+
