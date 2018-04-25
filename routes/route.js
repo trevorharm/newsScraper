@@ -1,4 +1,6 @@
-var scrapeController = require("../controllers/scrapeController")
+var scrapeController = require("../controllers/scrapeController");
+var express = require("express");
+var app = express();
 
 // Default landing page route
 app.get("/", function(req, res){
