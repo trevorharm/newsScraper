@@ -7,7 +7,7 @@ app.get("/", function(req, res){
     res.render('index')
 });
 
-// A GET route for scraping the PopularScience website
+// A GET route for scraping the MacRumors website
 app.get("/scrape", scrapeController.scrape);
   
   // Route for getting all Articles from the db
