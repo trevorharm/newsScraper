@@ -3,7 +3,7 @@
     <div class="container-fluid">
         <div class=-"row">
             <div class="col-md-3">
-                <h2>Science Scraper</h2>
+                <h2>Mongo Scraper</h2>
             </div>
             <div class="col-md-2">
                 <button type="button" class="btn btn-primary" type="submit">HOME</button>
@@ -14,9 +14,21 @@
             </div>
             <div>
                 <form action="/scrape" method="GET">
-                    <button type="button" class="btn btn-danger" type="submit">SCRAPE</button>
+                    <button type="button" class="btn btn-danger" id="scraper" type="submit">SCRAPE</button>
                 </form>
             </div>
         </div>
+        <div class="container">
+    <div class="row">
+        {{!-- column to show Articles--}}
+        <div class="col-md-9">
+            <ul>
+                {{#each articles}} 
+                    {{!-- {{> make-note}} --}}
+                    <li>{{this.title}}</li>
+                {{/each}}
+            </ul>
+        </div>
+
     </div>
 </body>
