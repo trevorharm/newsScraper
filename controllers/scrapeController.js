@@ -42,6 +42,7 @@ exports.scrape= function(req, res){
 };
 
 exports.articles = function(req, res) {
+  // console.log("home Pushed");
   // Grab every document in the Articles collection
   db.Article.find({})
     .then(function(dbArticle) {
@@ -60,7 +61,7 @@ exports.articles = function(req, res) {
 };
 
 
-exports.notes = function(req, res) {
+exports.favorites = function(req, res) {
         // Create a new note and pass the req.body to the entry
         db.Note.create(req.body)
           .then(function(dbNote) {
@@ -79,7 +80,7 @@ exports.notes = function(req, res) {
           });
       };
 
-exports.favorites = function(req, res) {
+exports.notes = function(req, res) {
     // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
     db.Article.findOne({ _id: req.params.id })
       // ..and populate all of the notes associated with it
