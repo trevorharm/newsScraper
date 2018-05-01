@@ -56,6 +56,7 @@ app.patch("/api/articles", function(req, res) {
 });
 
 app.get('/notes/:id', function (req, res) {
+    // console.log("notes get id passed");
   //Query to find the matching id to the passed in it
   db.Article.findOne({_id: req.params.id})
       .populate("note") //Populate all of the notes associated with it
@@ -68,19 +69,17 @@ app.get('/notes/:id', function (req, res) {
 });
 
 app.post('/notes/:id', function (req, res) {
-  var newNote = new db.Note(req.body);
-  //save newNote to the db
-  newNote.save(function (err, doc) {
-      if (err) console.log(err);
-      db.Article.findOneAndUpdate(
-          {_id: req.params.id}, // find the _id by req.params.id
-          {push: {note: doc._id}}, //push to the notes array
-          {new: true},
-          function(err, newdoc){
-              if (err) console.log(err);
-              res.send(newdoc);
-      });
-  });
+    // console.log("post notes id passed");
+
+        db.Note.create(req.body)
+        .then(function(newNote){
+            return db.Article.findOneAndUpdate({ _id: req.params.id }, 
+                                               { note: newNote._id }, 
+                                               { new: true });
+        }).then(function(err, newdoc){
+            if (err) console.log(err);
+            res.send(newdoc);
+        });
 });
 
 app.get('/deleteNote/:id', function(req, res){
