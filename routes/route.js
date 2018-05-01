@@ -1,22 +1,97 @@
 var scrapeController = require("../controllers/scrapeController");
-console.log(scrapeController.scrape);
+var db = require("../models");
+// console.log(scrapeController.scrape);
 
 module.exports = function(app){
-// Default landing page route
-app.get("/", function(req, res){
-    res.render('index')
+
+
+app.get("/", function(req, res) {
+  db.Article.find({saved: false}, function(error, found) {
+      if (error) {
+          console.log(error);
+      } else if (found.length === 0) {
+          res.render("empty")
+      } else {
+
+        var hbsObject = {
+            articles: found
+        };
+        res.render("index", hbsObject);
+
+      }
+  });
 });
 
- // A GET route for scraping the  website
-app.get("/scrape", scrapeController.scrape);
+app.get("/api/fetch", function(req, res) {
 
- // Route for getting all Articles from the db
-app.get("/articles", scrapeController.articles);
-  
-  // Route for grabbing a specific Article by id, populate it with it's note
-app.get("/articles/:id", scrapeController.favorites);
-  
-  // Route for saving/updating an Article's associated Note
-app.post("/articles/:id", scrapeController.notes);
+  // scrapes articles and saves unique ones to database
+  scrapeController.fetch(function(err, docs) {
+      //lets user know if there were new articles or not
+      if (!docs || docs.insertedCount === 0) {
+          res.json({message: "No new articles today. Check back tomorrow!"});
+      }
+      else {
+          res.json({message: "Added " + docs.insertedCount + " new articles!"});
 
-}
+      }
+  });
+});
+
+app.get("/saved", function(req, res) {
+
+  scrapeController.get({saved: true}, function(data) {
+      var hbsObject = {
+        articles: data
+      };
+      res.render("saved", hbsObject);
+  });
+});
+
+//for saving or unsaving articles
+app.patch("/api/articles", function(req, res) {
+
+  scrapeController.update(req.body, function(err, data) {
+      res.json(data);
+  });
+});
+
+app.get('/notes/:id', function (req, res) {
+  //Query to find the matching id to the passed in it
+  db.Article.findOne({_id: req.params.id})
+      .populate("note") //Populate all of the notes associated with it
+      .exec(function (error, doc) { //execute the query
+          if (error) console.log(error);
+          else {
+              res.json(doc);
+          }
+      });
+});
+
+app.post('/notes/:id', function (req, res) {
+  var newNote = new db.Note(req.body);
+  //save newNote to the db
+  newNote.save(function (err, doc) {
+      if (err) console.log(err);
+      db.Article.findOneAndUpdate(
+          {_id: req.params.id}, // find the _id by req.params.id
+          {push: {note: doc._id}}, //push to the notes array
+          {new: true},
+          function(err, newdoc){
+              if (err) console.log(err);
+              res.send(newdoc);
+      });
+  });
+});
+
+app.get('/deleteNote/:id', function(req, res){
+  db.Note.remove({"_id": req.params.id}, function(err, newdoc){
+      if(err) console.log(err);
+      res.redirect('/saved'); //redirect to reload the page
+  });
+});
+
+};
+
+
+
+

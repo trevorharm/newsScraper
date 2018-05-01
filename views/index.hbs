@@ -1,49 +1,18 @@
-<body>
-    <div class="container-fluid">
-        <div class="row" id="top">
-            <div class="col-md-3">
-                <h2>Mongo Scraper</h2>
-            </div>
-            <div class="col-md-2">
-                <form action="/articles" method="GET">
-                    <button type="button" class="btn btn-primary" id="home" onClick="location.href='/articles'" type="submit">HOME</button>
-                </form>
-            </div>
-            <div class="col-md-2">
-                {{!-- <form action="/" method="GET"> --}}
-                    <button type="button" class="btn btn-primary" id="favorites" type="submit">FAVORITES</button>
-                {{!-- </form>  --}}
-            </div>
-            <div>
-                <form action="/scrape" method="GET">
-                    <button type="button" class="btn btn-danger" id="scraper" type="submit">SCRAPE</button>
-                </form>
-            </div>
-        </div>
+
+<div class="articles container">
+
+    {{#each articles }}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{title}}</h3>
+      </div>
+      <div class="panel-body">
+        <a class="artLink" href={{link}}>{{link}}</a>
+        <button data-id={{_id}} class="btn btn-danger pull-right save-article">Save Article</button>
+      </div>
     </div>
-    <div class="container">
-        <div class="row">
-            {{!-- column to show Articles--}}
-                <div class="col-md-9">
-                    <ul>
-                        {{#each articles}}
-                        <li>
-                            <button class="favorite btn btn-warning" type="submit" data-id="{{id}}">
-                                SAVE
-                            </button>
-                            {{this.title}}
-                            <button class="note btn btn-primary" type="submit" data-id="{{id}}">
-                                NOTES
-                            </button>
-                            {{!-- </li> --}} {{!--
-                        <li id="url"> --}}
-                            <br> {{this.link}}
-                        </li>
-                        {{/each}}
-                    </ul>
-                </div>
-                <div class="col-md-3" id="notes">
-                </div>
-        </div>
-    </div>
-</body>
+    <br />
+    <br />
+    {{/each}}
+
+</div>
