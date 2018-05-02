@@ -1,6 +1,7 @@
 // Dependencies Defined
 var cheerio = require("cheerio");
 var request = require("request");
+var axios = require("axios");
 var db = require("../models");
 var exports = module.exports = {};
 
@@ -9,7 +10,7 @@ var scrape = function(callback) {
 
   var articlesArr = [];
 
-  request("https://www.nytimes.com/", function(error, response, html) {
+  axios.get("https://www.nytimes.com/".then(function(error, response, html) {
 
       var $ = cheerio.load(html);
 
@@ -26,9 +27,10 @@ var scrape = function(callback) {
           }
       });
       callback(articlesArr);
-  });
-
+  })
+  )
 };
+
 
 
 module.exports = {
@@ -50,6 +52,7 @@ module.exports = {
         });
     });
   },
+  
   get: function(query, cb) {
     db.Article.find(query)
       .sort({
@@ -60,16 +63,20 @@ module.exports = {
         cb(doc);
       });
   },
+
+  //save or unsave
+  
+  
   update: function(query, cb) {
-//save or unsave
-    db.Article.update({ _id: query.id }, {
+  db.Article.update({ _id: query.id }, {
       $set: {saved: query.saved}
     }, {}, cb);
   },
+
   addNote: function(query, cb) {
     db.Article.findOneAndUpdate({_id: query.id }, {
       $push: {note: query.note}
     }, {}, cb);
-  }
+  },
 };
 
