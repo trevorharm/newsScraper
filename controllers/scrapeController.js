@@ -10,17 +10,22 @@ var scrape = function(callback) {
 
   var articlesArr = [];
 
-  axios.get("https://www.nytimes.com/".then(function(error, response, html) {
+  axios.get("https://www.nytimes.com/")
+  .then(function(response) {
 
-      var $ = cheerio.load(html);
+      var $ = cheerio.load(response.data);
 
 
       $("h2.story-heading").each(function(i, element) {
 
           var result = {};
 
-          result.title = $(this).children("a").text();
-          result.link = $(this).children("a").attr("href");
+          result.title = $(this)
+          .children("a")
+          .text();
+          result.link = $(this)
+          .children("a")
+          .attr("href");
 
           if (result.title !== "" && result.link !== "") {
               articlesArr.push(result);
@@ -28,7 +33,6 @@ var scrape = function(callback) {
       });
       callback(articlesArr);
   })
-  )
 };
 
 
