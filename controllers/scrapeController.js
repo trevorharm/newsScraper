@@ -1,6 +1,5 @@
 // Dependencies Defined
 var cheerio = require("cheerio");
-var request = require("request");
 var axios = require("axios");
 var db = require("../models");
 var exports = module.exports = {};
@@ -51,8 +50,9 @@ module.exports = {
       }
 
 //no dupes
-        db.Article.insertMany(articlesArr, { ordered: false }, function(err, docs) {
+        db.Article.collection.insertMany(articlesArr, { ordered: false }, function(err, docs) {
           callback(err, docs);
+          // console.log(docs);
         });
     });
   },

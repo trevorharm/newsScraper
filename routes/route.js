@@ -26,7 +26,8 @@ app.get("/api/fetch", function(req, res) {
 
   // scrapes articles and saves unique ones to database
   scrapeController.fetch(function(err, docs) {
-      //lets user know if there were new articles or not
+      console.log(docs);
+      //lets user know if there are new articles or not
       if (!docs || docs.insertedCount === 0) {
           res.json({message: "No new articles today. Check back tomorrow!"});
       }
