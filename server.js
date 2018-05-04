@@ -27,8 +27,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
 
-// Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/newsScraper_DB");
+// Database configuration with mongoose
+var databaseUri = "mongodb://localhost/newsScraper_DB";
+
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI);
+} else {
+  mongoose.connect(databaseUri);
+}
+
+
 
 // Routes
 var route = require("./routes/route.js")(app);
